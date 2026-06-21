@@ -1,15 +1,31 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import "./portfolio.css";
-
+import w111  from "./realme2pro/w111.jpeg";
+import land  from "./realme2pro/download (1).png";
+import alnazer from "./realme2pro/w333.jpeg";
+import tq   from "./realme2pro/tq.jpeg";
+import cap  from "./realme2pro/cap.jpeg";
+import htmll   from "./realme2pro/htmll.png";
+import csss    from "./realme2pro/csss.png";
+import jss     from "./realme2pro/jss.png";
+import reactjs from "./realme2pro/reactjs.png";
+import gitt    from "./realme2pro/gitt.png";
+import githupp from "./realme2pro/githupp.png";
+import vs      from "./realme2pro/vs.png";
+import githuppContact from "./realme2pro/githupp.png";
+import linkedin from "./realme2pro/linkedinnn.png";
+import whatsapp from "./realme2pro/whatsapp.png";
+import heroBg from "./immg.png";
 /* ══════════════════════════════════════════
    DATA
 ══════════════════════════════════════════ */
+
 const WORKS = [
-  { id:1, cat:"web", title:"Portfolio Website",  desc:"A personal portfolio built from scratch — custom design, zero templates.",                                              tags:["HTML","CSS","JS","React JS"], img:"/realme2pro/w111.JPEG",        soon:false, icon:null, link:"#" },
-  { id:2, cat:"web", title:"Landing Page",        desc:"Responsive landing page with modern layout, smooth sections and clean UI.",                                             tags:["HTML","CSS"],                 img:"/realme2pro/download (1).png", soon:false, icon:null, link:"#" },
-  { id:3, cat:"web", title:"Alnazer Store",        desc:"A responsive jewelry e-commerce website built with a modern design, showcasing products in an elegant shopping experience.", tags:["HTML","CSS","JS"],         img:"/realme2pro/w333.jpeg",        soon:false, icon:null, link:"#" },
-  { id:4, cat:"web", title:"TQ Store",             desc:"A dynamic SPA built with React JS. Component-based, state-driven.",                                                     tags:["React JS","JS","CSS"],       img:"/realme2pro/tq.png",           soon:false, icon:null, link:"#" },
-  { id:5, cat:"web", title:"Capital Finance",      desc:"A secure multi-step form application featuring dynamic flow and progress tracking.",                                    tags:["HTML","CSS","JS","React JS"],img:"/realme2pro/cap.jpeg",         soon:false, icon:null, link:"#" },
+  { id:1, cat:"web", title:"Portfolio Website",  desc:"A personal portfolio built from scratch — custom design, zero templates.",                                              tags:["HTML","CSS","JS","React JS"], img: w111,        soon:false, icon:null, link:"#" },
+  { id:2, cat:"web", title:"Landing Page",        desc:"Responsive landing page with modern layout, smooth sections and clean UI.",                                             tags:["HTML","CSS"],                 img: land, soon:false, icon:null, link:"#" },
+  { id:3, cat:"web", title:"Alnazer Store",        desc:"A responsive jewelry e-commerce website built with a modern design, showcasing products in an elegant shopping experience.", tags:["HTML","CSS","JS"],         img: alnazer,        soon:false, icon:null, link:"#" },
+  { id:4, cat:"web", title:"TQ Store",             desc:"A dynamic SPA built with React JS. Component-based, state-driven.",                                                     tags:["React JS","JS","CSS"],       img: tq,           soon:false, icon:null, link:"https://michealmula.github.io/tq/" },
+  { id:5, cat:"web", title:"Capital Finance",      desc:"A secure multi-step form application featuring dynamic flow and progress tracking.",                                    tags:["HTML","CSS","JS","React JS"],img: cap,         soon:false, icon:null, link:"https://michealmula.github.io/loan/" },
   { id:6, cat:"web", title:"Full Stack App",       desc:"Frontend meets backend. A complete web app — coming when the stack is ready.",                                          tags:["React JS","Node.js","CSS"],  img:null,                           soon:true,  icon:"🚀", link:null },
 ];
 
@@ -18,25 +34,25 @@ const SKILL_GROUPS = [
     title:"Frontend Core",
     accent:"#e34f26",
     skills:[
-      { img:"/realme2pro/htmll.png", label:"HTML5",      desc:"Semantic, accessible, well-structured web pages." },
-      { img:"/realme2pro/csss.png",  label:"CSS3",       desc:"Flexbox, Grid, animations, responsive design." },
-      { img:"/realme2pro/jss.png",   label:"JavaScript", desc:"DOM manipulation, events, interactive experiences." },
+      { img: htmll, label:"HTML5",      desc:"Semantic, accessible, well-structured web pages." },
+      { img: csss,  label:"CSS3",       desc:"Flexbox, Grid, animations, responsive design." },
+      { img: jss,   label:"JavaScript", desc:"DOM manipulation, events, interactive experiences." },
     ],
   },
   {
     title:"Frameworks & Libraries",
     accent:"#61dafb",
     skills:[
-      { img:"/realme2pro/reactjs.png", label:"React JS", desc:"Component architecture, state management, SPAs." },
+      { img: reactjs, label:"React JS", desc:"Component architecture, state management, SPAs." },
     ],
   },
   {
     title:"Tools & Workflow",
     accent:"#f05032",
     skills:[
-      { img:"/realme2pro/gitt.png",   label:"Git",     desc:"Version control, branching, merging, clean history." },
-      { img:"/realme2pro/githupp.png",label:"GitHub",  desc:"Repos, collaboration, code review, open-source." },
-      { img:"/realme2pro/vs.png",     label:"VS Code", desc:"Code editing, debugging, extensions, productivity." },
+      { img: gitt,   label:"Git",     desc:"Version control, branching, merging, clean history." },
+      { img: githupp,label:"GitHub",  desc:"Repos, collaboration, code review, open-source." },
+      { img: vs,     label:"VS Code", desc:"Code editing, debugging, extensions, productivity." },
     ],
   },
 ];
@@ -300,6 +316,13 @@ function Navbar({ theme, toggle }) {
 }
 /* HERO */
 function Hero() {
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+useEffect(() => {
+  const onResize = () => setIsMobile(window.innerWidth <= 768);
+  window.addEventListener("resize", onResize);
+  return () => window.removeEventListener("resize", onResize);
+}, []);
   const typed = useTyping(["Web Developer","UI Designer","CS Student","React Dev"]);
   const bgRef = useRef(null);
   useEffect(()=>{
@@ -317,18 +340,42 @@ function Hero() {
          مثال: url('../realme 2pro/my-photo.jpg')
          الـ gradient فوقيها بيعمل fade من فوق ومن تحت
       ************************************************************ */
-backgroundImage:`
-  linear-gradient(to right, var(--bg) 0%, var(--bg) 38%, transparent 65%, transparent 100%),
-  linear-gradient(to left, var(--bg) 0%, transparent 20%, transparent 82%, var(--bg) 100%),
-  linear-gradient(to bottom, var(--bg) 0%, transparent 18%, transparent 80%, var(--bg) 100%),
-  url('../immg.png')
-`,
+backgroundImage: isMobile
+ ? `linear-gradient(to bottom, var(--bg) 0%, transparent 20%, var(--bg) 100%)`
+  : `
+      linear-gradient(to right, var(--bg) 0%, var(--bg) 38%, transparent 65%, transparent 100%),
+      linear-gradient(to left, var(--bg) 0%, transparent 20%, transparent 82%, var(--bg) 100%),
+      linear-gradient(to bottom, var(--bg) 0%, transparent 18%, transparent 80%, var(--bg) 100%),
+      url(${heroBg})
+    `,
       backgroundSize:"cover",
       backgroundPosition:"top center",
       display:"flex", flexDirection:"column",
       justifyContent:"center", alignItems:"flex-start",
       padding:"0 clamp(24px,8vw,120px)",
     }}>
+
+      {/* صورة الموبايل فقط */}
+{isMobile && (
+  <img
+    src={heroBg}
+    alt=""
+    style={{
+      position:"absolute",
+      right:"-80%",
+      top:0,
+      height:"100%",
+      width:"auto",
+      objectFit:"cover",
+      objectPosition:"right top",
+      zIndex:0,
+      pointerEvents:"none",
+      /* fade من الشمال ومن تحت */
+      maskImage:"linear-gradient(to right, transparent 0%, black 30%, black 100%), linear-gradient(to top, transparent 0%, black 15%, black 100%)",
+      WebkitMaskImage:"linear-gradient(to right, transparent 0%, black 30%, black 100%), linear-gradient(to top, transparent 0%, black 15%, black 100%)",
+    }}
+  />
+)}
       <Particles />
 
       {/* ── decorative vertical accent line ── */}
@@ -404,7 +451,8 @@ backgroundImage:`
           backgroundPosition: اضبطها عشان الوجه يبقى مظبوط
           القيمة الحالية "300px center" — زيد أو نقص الـ 300
       ************************************************************ */}
-      <div style={{
+      <div   className="hero-photo-div"
+        style={{
         position:"absolute",
         /* بيبدأ من 35% عشان يـ overlap مع النص ويحصل blend طبيعي */
         left:"35%",
@@ -788,9 +836,9 @@ function Skills() {
 /* CONTACT STRIP */
 function ContactStrip() {
   const socials = [
-    ["GitHub","https://github.com/michealmula/","/realme2pro/githupp.png"],
-    ["LinkedIn","https://www.linkedin.com/in/mikel-emel-59933933b/","/realme2pro/linkedin.png"],
-    ["WhatsApp","https://wa.me/201117359755/","/realme2pro/whatsapp.png"],
+    ["GitHub","https://github.com/michealmula/",githupp],
+    ["LinkedIn","https://www.linkedin.com/in/mikel-emel-59933933b/",linkedin],
+    ["WhatsApp","https://wa.me/201117359755/",whatsapp],
   ];
   return (
     <section id="contact" style={{padding:"100px clamp(24px,8vw,120px)",overflow:"hidden",position:"relative"}}>

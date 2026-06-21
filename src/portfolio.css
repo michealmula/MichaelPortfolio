@@ -310,21 +310,10 @@ body::before{
     linear-gradient(to top,   transparent 0%, black 10%, black 100%),
     linear-gradient(to bottom,transparent 0%, black 5%,  black 100%);
 }
-
 @media(max-width:768px){
-  /* الصورة تبقى في الخلف كـ overlay شفاف */
-  .hero-photo-div{
-    left:0 !important;
-    mask-image:
-      linear-gradient(to bottom, transparent 0%, rgba(0,0,0,.18) 20%, rgba(0,0,0,.35) 60%, transparent 100%),
-      linear-gradient(to right,  transparent 0%, black 25%, black 75%, transparent 100%) !important;
-    -webkit-mask-image:
-      linear-gradient(to bottom, transparent 0%, rgba(0,0,0,.18) 20%, rgba(0,0,0,.35) 60%, transparent 100%),
-      linear-gradient(to right,  transparent 0%, black 25%, black 75%, transparent 100%) !important;
-    opacity:.45;
-  }
-  .hero-text-col{position:relative;z-index:3 !important}
-
+.hero-photo-div{
+  display:none !important;
+}
   /* Stats */
   .stats-grid{grid-template-columns:repeat(2,1fr) !important}
 
