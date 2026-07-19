@@ -373,3 +373,12 @@ body::before{
    ANIMATIONS — misc
 ══════════════════════════════════════════ */
 @keyframes revealLine{from{width:0}to{width:100%}}
+/* ── WORK FULLSCREEN ── */
+@media(max-width:768px){
+  #work [style*="clamp(260px,36vw"]{
+    display:none !important;
+  }
+  #work [style*="clamp(200px,28vw"]{
+    display:none !important;
+  }
+}

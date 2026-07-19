@@ -16,6 +16,10 @@ import githuppContact from "./realme2pro/githupp.png";
 import linkedin from "./realme2pro/linkedinnn.png";
 import whatsapp from "./realme2pro/whatsapp.png";
 import heroBg from "./immg.png";
+
+import { motion, AnimatePresence } from 'framer-motion';
+
+import { useSpring, animated } from '@react-spring/web';
 /* ══════════════════════════════════════════
    DATA
 ══════════════════════════════════════════ */
@@ -617,79 +621,39 @@ function Modal({ p, onClose }) {
   useEffect(() => {
     if (p) requestAnimationFrame(() => setShow(true));
   }, [p]);
-
   if (!p) return null;
-
   return (
-    <div
-      className="overlay"
-      onClick={onClose}
-      style={{ opacity: show ? 1 : 0, transition: "opacity .2s ease" }}
-    >
-      <div
-        className="mbox"
-        onClick={e => e.stopPropagation()}
+    <div className="overlay" onClick={onClose}
+      style={{ opacity: show ? 1 : 0, transition: "opacity .2s ease" }}>
+      <div className="mbox" onClick={e => e.stopPropagation()}
         style={{
           position: "relative",
           transform: show ? "scale(1) translateY(0)" : "scale(.93) translateY(24px)",
           opacity: show ? 1 : 0,
           transition: "transform .35s cubic-bezier(.22,.68,0,1.2), opacity .25s ease",
           maxWidth: 640,
-        }}
-      >
-        {/* ── image — full, not cropped ── */}
+        }}>
         <div style={{
-          width: "100%",
-          background: p.img
-            ? "var(--bg2)"
-            : "linear-gradient(135deg,rgba(180,255,80,.07),rgba(0,232,200,.05))",
+          width: "100%", background: p.img ? "var(--bg2)" : "linear-gradient(135deg,rgba(180,255,80,.07),rgba(0,232,200,.05))",
           display: "flex", alignItems: "center", justifyContent: "center",
-          overflow: "hidden",
-          borderRadius: "4px 4px 0 0",
-          minHeight: 200,
+          overflow: "hidden", borderRadius: "4px 4px 0 0", minHeight: 200,
         }}>
           {p.img
-            ? <img
-                src={p.img}
-                alt={p.title}
-                style={{
-                  width: "100%",
-                  height: "auto",
-                  maxHeight: 360,
-                  objectFit: "contain",
-                  objectPosition: "center",
-                  display: "block",
-                  padding: "12px",
-                }}
-              />
-            : <span style={{ fontSize: 72 }}>{p.icon}</span>
-          }
+            ? <img src={p.img} alt={p.title} style={{ width:"100%", height:"auto", maxHeight:360, objectFit:"contain", display:"block", padding:"12px" }}/>
+            : <span style={{ fontSize: 72 }}>{p.icon}</span>}
         </div>
-
         <button className="mclose" onClick={onClose}>✕</button>
-
         <div style={{ padding: "26px 28px 32px" }}>
-          {/* title row */}
           <div style={{ display:"flex", alignItems:"center", gap:10, marginBottom:8, flexWrap:"wrap" }}>
-            <h3 style={{ fontFamily:"'Cabinet Grotesk',sans-serif", fontWeight:800, fontSize:20, color:"var(--text)", flex:1 }}>
-              {p.title}
-            </h3>
+            <h3 style={{ fontFamily:"'Cabinet Grotesk',sans-serif", fontWeight:800, fontSize:20, color:"var(--text)", flex:1 }}>{p.title}</h3>
             {p.soon && <span className="soon-badge">Soon</span>}
           </div>
-
           <p style={{ color:"var(--t2)", fontSize:14, lineHeight:1.8, marginBottom:20 }}>{p.desc}</p>
-
           <div style={{ display:"flex", flexWrap:"wrap", gap:8, marginBottom: p.link ? 24 : 0 }}>
             {p.tags.map(t => <span key={t} className="tag">{t}</span>)}
           </div>
-
           {p.link && !p.soon && (
-            <a
-              href={p.link}
-              target="_blank"
-              rel="noreferrer"
-              className="visit-btn"
-            >
+            <a href={p.link} target="_blank" rel="noreferrer" className="visit-btn">
               Visit Site <span className="arrow">↗</span>
             </a>
           )}
@@ -700,190 +664,636 @@ function Modal({ p, onClose }) {
 }
 
 function Work() {
-  const [m, setM] = useState(null);
   const [active, setActive] = useState(0);
-  const [animating, setAnimating] = useState(false);
+  const [m, setM] = useState(null);
+  const containerRef = useRef(null);
+  const isAnimating = useRef(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  
+  // 🎯 للتعامل مع اللمس
+  const onTouchStart = useRef({ y: 0 });
 
-  const goTo = (idx) => {
-    if (animating || idx === active) return;
-    setAnimating(true);
-    setTimeout(() => { setActive(idx); setAnimating(false); }, 350);
+  useEffect(() => {
+    const onResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
+  // 🎯 منع التمرير العادي للصفحة جوا القسم
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    // منع التمرير العادي
+    const preventScroll = (e) => {
+      if (el.contains(e.target)) {
+        e.preventDefault();
+      }
+    };
+
+    // منع الـ scroll events
+    document.addEventListener('wheel', preventScroll, { passive: false });
+    document.addEventListener('touchmove', preventScroll, { passive: false });
+
+    return () => {
+      document.removeEventListener('wheel', preventScroll);
+      document.removeEventListener('touchmove', preventScroll);
+    };
+  }, []);
+
+  // 🎯 التمرير بالعجلة مع إمكانية الخروج من القسم
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const onWheel = (e) => {
+      // منع التمرير العادي
+      e.preventDefault();
+      
+      if (isAnimating.current) return;
+      
+      // 🎯 التمرير لأسفل
+      if (e.deltaY > 30) {
+        if (active < WORKS.length - 1) {
+          isAnimating.current = true;
+          setActive(prev => prev + 1);
+          setTimeout(() => { isAnimating.current = false; }, 600);
+        } else {
+          // 🎯 لو في آخر مشروع، اخرج من القسم للـ Services
+          isAnimating.current = true;
+          // إعادة تفعيل التمرير العادي مؤقتاً
+          document.removeEventListener('wheel', preventScroll);
+          document.removeEventListener('touchmove', preventScroll);
+          
+          const servicesSection = document.getElementById('service');
+          if (servicesSection) {
+            servicesSection.scrollIntoView({ behavior: 'smooth' });
+          }
+          
+          setTimeout(() => { 
+            isAnimating.current = false;
+            // إعادة منع التمرير بعد الخروج
+            setTimeout(() => {
+              document.addEventListener('wheel', preventScroll, { passive: false });
+              document.addEventListener('touchmove', preventScroll, { passive: false });
+            }, 100);
+          }, 600);
+        }
+      } 
+      // 🎯 التمرير لأعلى
+      else if (e.deltaY < -30) {
+        if (active > 0) {
+          isAnimating.current = true;
+          setActive(prev => prev - 1);
+          setTimeout(() => { isAnimating.current = false; }, 600);
+        } else {
+          // 🎯 لو في أول مشروع، اخرج من القسم للـ About
+          isAnimating.current = true;
+          // إعادة تفعيل التمرير العادي مؤقتاً
+          document.removeEventListener('wheel', preventScroll);
+          document.removeEventListener('touchmove', preventScroll);
+          
+          const aboutSection = document.getElementById('about');
+          if (aboutSection) {
+            aboutSection.scrollIntoView({ behavior: 'smooth' });
+          }
+          
+          setTimeout(() => { 
+            isAnimating.current = false;
+            // إعادة منع التمرير بعد الخروج
+            setTimeout(() => {
+              document.addEventListener('wheel', preventScroll, { passive: false });
+              document.addEventListener('touchmove', preventScroll, { passive: false });
+            }, 100);
+          }, 600);
+        }
+      }
+    };
+
+    // دالة منع التمرير (نفس اللي فوق)
+    const preventScroll = (e) => {
+      const el = containerRef.current;
+      if (el && el.contains(e.target)) {
+        e.preventDefault();
+      }
+    };
+
+    el.addEventListener("wheel", onWheel, { passive: false });
+    
+    return () => {
+      el.removeEventListener("wheel", onWheel);
+      document.removeEventListener('wheel', preventScroll);
+      document.removeEventListener('touchmove', preventScroll);
+    };
+  }, [active]);
+
+  // 🎯 معالج اللمس
+  const onTouchStartHandler = (e) => {
+    onTouchStart.current.y = e.touches[0].clientY;
   };
 
-  const w = WORKS[active];
+  const onTouchMoveHandler = (e) => {
+    e.preventDefault();
+    if (isAnimating.current) return;
+    
+    const deltaY = onTouchStart.current.y - e.touches[0].clientY;
+    
+    // 🎯 السحب لأسفل (للأمام)
+    if (deltaY > 30 && active < WORKS.length - 1) {
+      isAnimating.current = true;
+      setActive(prev => prev + 1);
+      setTimeout(() => { isAnimating.current = false; }, 600);
+    } 
+    // 🎯 السحب لأعلى (للخلف)
+    else if (deltaY < -30 && active > 0) {
+      isAnimating.current = true;
+      setActive(prev => prev - 1);
+      setTimeout(() => { isAnimating.current = false; }, 600);
+    }
+    // 🎯 الخروج من القسم باللمس
+    else if (deltaY > 30 && active === WORKS.length - 1) {
+      isAnimating.current = true;
+      const servicesSection = document.getElementById('service');
+      if (servicesSection) {
+        servicesSection.scrollIntoView({ behavior: 'smooth' });
+      }
+      setTimeout(() => { isAnimating.current = false; }, 600);
+    }
+    else if (deltaY < -30 && active === 0) {
+      isAnimating.current = true;
+      const aboutSection = document.getElementById('about');
+      if (aboutSection) {
+        aboutSection.scrollIntoView({ behavior: 'smooth' });
+      }
+      setTimeout(() => { isAnimating.current = false; }, 600);
+    }
+  };
+
+  const goTo = (idx) => {
+    if (isAnimating.current || idx === active) return;
+    setActive(idx);
+  };
 
   return (
-    <section id="work" style={{ padding:"80px clamp(24px,8vw,120px) 120px", maxWidth:1400, margin:"0 auto" }}>
-      <Fi>
-        <div style={{ display:"flex", alignItems:"baseline", gap:20, marginBottom:64 }}>
-          <span style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:"clamp(52px,8vw,96px)", color:"var(--text)", lineHeight:1 }}>My</span>
-          <span style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:"clamp(52px,8vw,96px)", color:"var(--a)", lineHeight:1 }}>Works</span>
-          <div style={{ flex:1, height:1, background:"linear-gradient(to right,var(--a),transparent)", alignSelf:"center", marginLeft:16 }}/>
-        </div>
-      </Fi>
-
-      <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:0, border:"1px solid var(--bd)", borderRadius:8, overflow:"hidden", minHeight:520 }}>
-
-        {/* LEFT — project list */}
-        <div style={{ borderRight:"1px solid var(--bd)", display:"flex", flexDirection:"column" }}>
-          {WORKS.map((p, i) => (
-            <div
-              key={p.id}
-              data-hover
-              onClick={() => { goTo(i); setM(null); }}
-              style={{
-                flex:1,
-                padding:"clamp(16px,2vw,28px) clamp(18px,2.5vw,36px)",
-                borderBottom: i < WORKS.length-1 ? "1px solid var(--bd)" : "none",
-                cursor:"none",
-                position:"relative",
-                overflow:"hidden",
-                background: active===i ? "rgba(180,255,80,.04)" : "transparent",
-                transition:"background .3s",
-              }}
-              onMouseEnter={e => { if(active!==i) e.currentTarget.style.background="rgba(255,255,255,.02)"; }}
-              onMouseLeave={e => { if(active!==i) e.currentTarget.style.background="transparent"; }}
-            >
-              {/* active indicator */}
-              <div style={{
-                position:"absolute", left:0, top:0, bottom:0,
-                width: active===i ? 3 : 0,
-                background:"var(--a)",
-                transition:"width .3s cubic-bezier(.22,.68,0,1.2)",
-              }}/>
-
-              <div style={{ display:"flex", alignItems:"center", gap:16 }}>
-                {/* number */}
-                <span style={{
-                  fontFamily:"'Bebas Neue',sans-serif",
-                  fontSize:13, letterSpacing:".12em",
-                  color: active===i ? "var(--a)" : "var(--t3)",
-                  transition:"color .3s",
-                  flexShrink:0,
-                }}>0{i+1}</span>
-
-                {/* title */}
-                <span style={{
-                  fontFamily:"'Cabinet Grotesk',sans-serif",
-                  fontWeight:800,
-                  fontSize:"clamp(13px,1.4vw,17px)",
-                  color: active===i ? "var(--text)" : "var(--t2)",
-                  transition:"color .3s",
-                  flex:1,
-                }}>{p.title}</span>
-
-                {p.soon && <span className="soon-badge">Soon</span>}
-
-                {/* arrow */}
-                <span style={{
-                  fontSize:14,
-                  color:"var(--t3)",
-                  transform: active===i ? "translateX(0) rotate(0deg)" : "translateX(-4px) rotate(-45deg)",
-                  transition:"transform .3s, color .3s",
-                  color: active===i ? "var(--a)" : "var(--t3)",
-                }}>→</span>
-              </div>
-
-              {/* tags under title when active */}
-              <div style={{
-                display:"flex", flexWrap:"wrap", gap:5,
-                marginTop: active===i ? 10 : 0,
-                maxHeight: active===i ? 40 : 0,
-                overflow:"hidden",
-                opacity: active===i ? 1 : 0,
-                transition:"max-height .4s cubic-bezier(.22,.68,0,1.2), opacity .3s, margin-top .3s",
-                paddingLeft:30,
-              }}>
-                {p.tags.map(t => <span key={t} className="tag" style={{fontSize:10}}>{t}</span>)}
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* RIGHT — active project showcase */}
-        <div style={{ position:"relative", overflow:"hidden", background:"var(--bgc)" }}>
-
-          {/* image */}
-          <div style={{
-            position:"absolute", inset:0,
-            backgroundImage: w.img ? `url('${w.img}')` : "none",
-            backgroundSize:"cover",
-            backgroundPosition:"center",
-            opacity: animating ? 0 : 0.35,
-            transform: animating ? "scale(1.05)" : "scale(1)",
-            transition:"opacity .35s ease, transform .35s ease",
-            display:"flex", alignItems:"center", justifyContent:"center",
-            fontSize:80,
-          }}>
-            {!w.img && w.icon}
-          </div>
-
-          {/* gradient overlay */}
-          <div style={{ position:"absolute", inset:0, background:"linear-gradient(135deg, var(--bgc) 0%, transparent 60%, var(--bgc) 100%)", pointerEvents:"none" }}/>
-
-          {/* content */}
-          <div style={{
-            position:"relative", zIndex:2,
-            padding:"clamp(28px,4vw,52px)",
-            height:"100%",
-            display:"flex", flexDirection:"column", justifyContent:"flex-end",
-            opacity: animating ? 0 : 1,
-            transform: animating ? "translateY(12px)" : "translateY(0)",
-            transition:"opacity .35s ease, transform .35s cubic-bezier(.22,.68,0,1.2)",
-          }}>
-            <span style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:11, color:"var(--a)", letterSpacing:".2em", marginBottom:10 }}>
-              0{active+1} / 0{WORKS.length}
-            </span>
-            <h2 style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:"clamp(32px,4vw,56px)", color:"var(--text)", lineHeight:1, marginBottom:14 }}>
-              {w.title}
-            </h2>
-            <p style={{ color:"var(--t2)", fontSize:14, lineHeight:1.8, marginBottom:24, maxWidth:360 }}>
-              {w.desc}
-            </p>
-            <div style={{ display:"flex", gap:8, flexWrap:"wrap", marginBottom:24 }}>
-              {w.tags.map(t => <span key={t} className="tag">{t}</span>)}
-            </div>
-            <div style={{ display:"flex", gap:12, alignItems:"center" }}>
-              {w.link && !w.soon && (
-                <a href={w.link} target="_blank" rel="noreferrer" className="visit-btn" style={{ marginTop:0 }}>
-                  Visit Site <span className="arrow">↗</span>
-                </a>
-              )}
-              <button
-                onClick={() => setM(w)}
-                style={{
-                  background:"transparent", border:"1px solid var(--bd)",
-                  borderRadius:2, padding:"10px 20px",
-                  color:"var(--t2)", fontSize:12, fontWeight:700,
-                  letterSpacing:".06em", textTransform:"uppercase",
-                  cursor:"none", fontFamily:"'Cabinet Grotesk',sans-serif",
-                }}
-              >
-                Details
-              </button>
-            </div>
-          </div>
-
-          {/* prev / next nav */}
-          <div style={{ position:"absolute", top:16, right:16, display:"flex", gap:8, zIndex:3 }}>
-            {[["‹", active-1], ["›", active+1]].map(([lbl, idx]) => (
-              <button key={lbl}
-                onClick={() => goTo((idx + WORKS.length) % WORKS.length)}
-                style={{
-                  width:32, height:32, borderRadius:2,
-                  background:"var(--bgc)", border:"1px solid var(--bd)",
-                  color:"var(--text)", fontSize:18, cursor:"none",
-                  display:"flex", alignItems:"center", justifyContent:"center",
-                  fontFamily:"monospace",
-                }}
-              >{lbl}</button>
-            ))}
-          </div>
+    <section 
+      id="work" 
+      ref={containerRef}
+      style={{
+        height: "100vh",
+        width: "100vw",
+        overflow: "hidden",
+        position: "relative",
+        background: "var(--bg)",
+        touchAction: "none",
+      }}
+      onTouchStart={onTouchStartHandler}
+      onTouchMove={onTouchMoveHandler}
+    >
+      {/* ── title ── */}
+      <div style={{
+        position: "absolute",
+        top: isMobile ? "clamp(16px, 3vh, 30px)" : "clamp(30px, 5vh, 60px)",
+        left: isMobile ? "clamp(12px, 4vw, 20px)" : "clamp(24px, 6vw, 80px)",
+        zIndex: 20,
+        pointerEvents: "none",
+      }}>
+        <div style={{ display: "flex", alignItems: "baseline", gap: isMobile ? 8 : 16 }}>
+          <span style={{ 
+            fontFamily: "'Bebas Neue',sans-serif", 
+            fontSize: isMobile ? "clamp(24px, 5vw, 32px)" : "clamp(36px, 5vw, 64px)", 
+            color: "var(--text)", 
+            lineHeight: 1 
+          }}>My</span>
+          <span style={{ 
+            fontFamily: "'Bebas Neue',sans-serif", 
+            fontSize: isMobile ? "clamp(24px, 5vw, 32px)" : "clamp(36px, 5vw, 64px)", 
+            color: "var(--a)", 
+            lineHeight: 1 
+          }}>Works</span>
         </div>
       </div>
 
-      {m && <Modal p={m} onClose={() => setM(null)}/>}
+      {/* ── dot nav ── */}
+      <div style={{
+        position: "absolute", 
+        right: isMobile ? 12 : 32, 
+        top: "50%", 
+        transform: "translateY(-50%)",
+        zIndex: 20, 
+        display: "flex", 
+        flexDirection: "column", 
+        gap: isMobile ? 6 : 10,
+      }}>
+        {WORKS.map((_, i) => (
+          <button 
+            key={i} 
+            onClick={() => goTo(i)} 
+            style={{
+              width: i === active ? (isMobile ? 8 : 10) : (isMobile ? 4 : 6),
+              height: i === active ? (isMobile ? 8 : 10) : (isMobile ? 4 : 6),
+              borderRadius: "50%",
+              background: i === active ? "var(--a)" : "var(--bd)",
+              border: "none", 
+              cursor: "pointer", 
+              padding: 0,
+              transition: "all .3s",
+              boxShadow: i === active ? "0 0 8px var(--a)" : "none",
+            }}
+          />
+        ))}
+      </div>
+
+      {/* ── slide counter ── */}
+      <div style={{
+        position: "absolute", 
+        bottom: isMobile ? 12 : 32, 
+        left: isMobile ? "clamp(12px, 4vw, 20px)" : "clamp(24px, 6vw, 80px)",
+        zIndex: 20, 
+        fontFamily: "'Bebas Neue',sans-serif",
+        fontSize: isMobile ? 10 : 13, 
+        letterSpacing: ".2em", 
+        color: "var(--t3)",
+      }}>
+        0{active + 1} <span style={{ color: "var(--bd)" }}>/ 0{WORKS.length}</span>
+      </div>
+
+      {/* ── Slides using CSS transform ── */}
+      <div
+        style={{
+          height: `${WORKS.length * 100}vh`,
+          width: "100%",
+          transform: `translateY(-${active * 100}vh)`,
+          transition: "transform 0.7s cubic-bezier(0.22, 0.68, 0, 1.2)",
+          willChange: "transform",
+        }}
+      >
+        {WORKS.map((w, index) => (
+          <div
+            key={index}
+            style={{
+              height: "100vh",
+              width: "100%",
+              display: "flex",
+              alignItems: "center",
+              position: "relative",
+              background: "var(--bg)",
+              overflow: "hidden",
+            }}
+          >
+            <FullSlideContent 
+              w={w} 
+              onOpen={setM} 
+              isActive={index === active}
+            />
+          </div>
+        ))}
+      </div>
+
+      {/* ── Modal ── */}
+      {m && <Modal p={m} onClose={() => setM(null)} />}
+
+      {/* ── Scroll hint ── */}
+{active === 0 && !isMobile && (
+        <div style={{
+          position: "absolute", 
+          bottom: isMobile ? 60 : 32, 
+          right: isMobile ? "clamp(12px, 4vw, 20px)" : "clamp(16px, 4vw, 60px)",
+          zIndex: 10, 
+          display: "flex", 
+          flexDirection: "column", 
+          alignItems: "center", 
+          gap: 6,
+        }}>
+          <span style={{ 
+            fontSize: isMobile ? 7 : 9, 
+            color: "var(--t3)", 
+            letterSpacing: 3, 
+            textTransform: "uppercase", 
+            fontFamily: "'Cabinet Grotesk',sans-serif", 
+            writingMode: "vertical-rl" 
+          }}>Scroll</span>
+          <div style={{ 
+            width: 1, 
+            height: isMobile ? 20 : 40, 
+            background: "linear-gradient(to bottom,var(--a2),transparent)" 
+          }}/>
+        </div>
+      )}
+
+      {/* ── Bottom indicator ── */}
+      {active === WORKS.length - 1 && (
+        <div style={{
+          position: "absolute", 
+          bottom: isMobile ? 60 : 32, 
+          right: isMobile ? "clamp(12px, 4vw, 20px)" : "clamp(16px, 4vw, 60px)",
+          zIndex: 10, 
+          display: "flex", 
+          flexDirection: "column", 
+          alignItems: "center", 
+          gap: 6,
+        }}>
+          <span style={{ 
+            fontSize: isMobile ? 7 : 9, 
+            color: "var(--t3)", 
+            letterSpacing: 3, 
+            textTransform: "uppercase", 
+            fontFamily: "'Cabinet Grotesk',sans-serif", 
+            writingMode: "vertical-rl" 
+          }}>Next</span>
+          <div style={{ 
+            width: 1, 
+            height: isMobile ? 20 : 40, 
+            background: "linear-gradient(to bottom,var(--a2),transparent)" 
+          }}/>
+        </div>
+      )}
     </section>
+  );
+}
+
+function FullSlideContent({ w, onOpen, isActive }) {
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  
+  useEffect(() => {
+    const onResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
+  return (
+    <div style={{
+      width: "100%",
+      height: "100%",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      position: "relative",
+      overflow: "hidden",
+      background: "var(--bg)",
+      opacity: isActive ? 1 : 0.8,
+      transition: "opacity 0.5s ease",
+      padding: isMobile ? "0" : "0",
+    }}>
+      {/* ── BG image ── */}
+      {w.img && (
+        <div style={{
+          position: "absolute", 
+          inset: 0,
+          backgroundImage: `url('${w.img}')`,
+          backgroundSize: "cover", 
+          backgroundPosition: "center",
+          opacity: isMobile ? 0.08 : 0.15,
+          filter: isMobile ? "blur(4px)" : "blur(3px)",
+          transform: isMobile ? "scale(1.1)" : "scale(1)",
+          transition: "opacity 0.6s ease, transform 0.6s ease",
+        }}/>
+      )}
+
+      {/* ── gradient overlay ── */}
+      <div style={{
+        position: "absolute", 
+        inset: 0,
+        background: isMobile 
+          ? `linear-gradient(to bottom, var(--bg) 0%, transparent 15%, transparent 70%, var(--bg) 100%)`
+          : `linear-gradient(to right, var(--bg) 0%, var(--bg) 40%, transparent 75%), 
+             linear-gradient(to top, var(--bg) 0%, transparent 25%)`,
+        pointerEvents: "none",
+      }}/>
+
+      {/* ── content container ── */}
+      <div style={{
+        position: "relative", 
+        zIndex: 2,
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        flexDirection: isMobile ? "column" : "row",
+        alignItems: isMobile ? "center" : "center",
+        justifyContent: isMobile ? "center" : "space-between",
+        padding: isMobile ? "60px 20px 20px" : "120px clamp(24px, 8vw, 120px) 80px",
+        maxWidth: isMobile ? "100%" : 1400,
+        margin: "0 auto",
+        gap: isMobile ? 16 : 0,
+      }}>
+        {/* ── left content ── */}
+        <div style={{
+          width: isMobile ? "100%" : "auto",
+          flex: isMobile ? "none" : 1,
+          maxWidth: isMobile ? "100%" : 780,
+          padding: isMobile ? "0" : "0",
+          transform: isActive ? "translateY(0)" : "translateY(20px)",
+          opacity: isActive ? 1 : 0.7,
+          transition: "transform 0.6s cubic-bezier(0.22, 0.68, 0, 1.2), opacity 0.5s ease",
+          textAlign: isMobile ? "center" : "left",
+        }}>
+          {/* index */}
+          <span style={{
+            fontFamily: "'Bebas Neue',sans-serif", 
+            fontSize: isMobile ? 10 : 11,
+            color: "var(--a)", 
+            letterSpacing: ".25em",
+            display: "block", 
+            marginBottom: isMobile ? 12 : 24,
+            textAlign: isMobile ? "center" : "left",
+          }}>
+            PROJECT — 0{w.id}
+          </span>
+
+          {/* title */}
+          <h2 style={{
+            fontFamily: "'Bebas Neue',sans-serif",
+            fontSize: isMobile ? "clamp(36px, 8vw, 48px)" : "clamp(52px, 8vw, 110px)",
+            color: "var(--text)", 
+            lineHeight: isMobile ? 1.1 : 0.95,
+            marginBottom: isMobile ? 12 : 28, 
+            letterSpacing: ".01em",
+            textAlign: isMobile ? "center" : "left",
+            wordBreak: "break-word",
+          }}>
+            {w.title}
+            {w.soon && (
+              <span className="soon-badge" style={{ 
+                marginLeft: isMobile ? 8 : 16, 
+                verticalAlign: "middle", 
+                fontSize: isMobile ? 10 : 14,
+                display: isMobile ? "inline-block" : "inline",
+              }}>Soon</span>
+            )}
+          </h2>
+
+          {/* desc */}
+          <p style={{
+            color: "var(--t2)", 
+            fontSize: isMobile ? "clamp(13px, 2.5vw, 15px)" : "clamp(15px, 1.5vw, 18px)",
+            lineHeight: isMobile ? 1.7 : 1.8, 
+            marginBottom: isMobile ? 16 : 32, 
+            maxWidth: isMobile ? "100%" : 520,
+            textAlign: isMobile ? "center" : "left",
+            padding: isMobile ? "0 4px" : "0",
+          }}>{w.desc}</p>
+
+          {/* tags */}
+          <div style={{ 
+            display: "flex", 
+            flexWrap: "wrap", 
+            gap: isMobile ? 6 : 8, 
+            marginBottom: isMobile ? 16 : 40,
+            justifyContent: isMobile ? "center" : "flex-start",
+          }}>
+            {w.tags.map(t => (
+              <span key={t} className="tag" style={{ 
+                fontSize: isMobile ? 9 : 12, 
+                padding: isMobile ? "3px 8px" : "5px 14px",
+                background: "rgba(180,255,80,0.08)",
+                border: "1px solid rgba(180,255,80,0.15)",
+                borderRadius: "4px",
+                color: "var(--t2)",
+                fontFamily: "'Cabinet Grotesk',sans-serif",
+                fontWeight: 600,
+                letterSpacing: "0.03em",
+              }}>{t}</span>
+            ))}
+          </div>
+
+          {/* CTAs */}
+          <div style={{ 
+            display: "flex", 
+            gap: isMobile ? 8 : 14, 
+            flexWrap: "wrap", 
+            alignItems: "center",
+            justifyContent: isMobile ? "center" : "flex-start",
+          }}>
+            {w.link && !w.soon && (
+              <a href={w.link} target="_blank" rel="noreferrer" 
+                className="visit-btn" 
+                style={{ 
+                  marginTop: 0,
+                  padding: isMobile ? "8px 16px" : "12px 28px",
+                  fontSize: isMobile ? 11 : 14,
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 8,
+                  background: "var(--a)",
+                  color: "var(--bg)",
+                  fontWeight: 800,
+                  textTransform: "uppercase",
+                  textDecoration: "none",
+                  borderRadius: "2px",
+                  border: "2px solid var(--a)",
+                  fontFamily: "'Cabinet Grotesk',sans-serif",
+                  letterSpacing: ".06em",
+                }}
+              >
+                Visit Site <span className="arrow" style={{ fontSize: isMobile ? 14 : 18 }}>↗</span>
+              </a>
+            )}
+            <button 
+              onClick={() => onOpen(w)} 
+              style={{
+                background: "transparent", 
+                border: "1px solid var(--bd)",
+                borderRadius: 2, 
+                padding: isMobile ? "8px 16px" : "12px 24px",
+                color: "var(--t2)", 
+                fontSize: isMobile ? 10 : 12, 
+                fontWeight: 700,
+                letterSpacing: ".06em", 
+                textTransform: "uppercase",
+                cursor: "pointer", 
+                fontFamily: "'Cabinet Grotesk',sans-serif",
+                transition: "border-color .2s, color .2s",
+              }}
+              onMouseEnter={e => { 
+                e.currentTarget.style.borderColor = "var(--a)"; 
+                e.currentTarget.style.color = "var(--a)"; 
+              }}
+              onMouseLeave={e => { 
+                e.currentTarget.style.borderColor = "var(--bd)"; 
+                e.currentTarget.style.color = "var(--t2)"; 
+              }}
+            >
+              Details →
+            </button>
+          </div>
+        </div>
+
+        {/* ── right preview image (Desktop only) ── */}
+        {w.img && !isMobile && (
+          <div style={{
+            position: "relative",
+            width: "clamp(300px, 36vw, 520px)",
+            aspectRatio: "16/10",
+            borderRadius: 8,
+            overflow: "hidden",
+            border: "1px solid var(--bd)",
+            boxShadow: "0 32px 80px rgba(0,0,0,.5)",
+            flexShrink: 0,
+            transform: isActive ? "scale(1)" : "scale(0.9)",
+            opacity: isActive ? 1 : 0.5,
+            transition: "transform 0.6s cubic-bezier(0.22, 0.68, 0, 1.2), opacity 0.5s ease",
+          }}>
+            <img src={w.img} alt={w.title} style={{ 
+              width: "100%", 
+              height: "100%", 
+              objectFit: "cover" 
+            }}/>
+            <div style={{ 
+              position: "absolute", 
+              inset: 0, 
+              background: "linear-gradient(135deg, rgba(180,255,80,.06), transparent)" 
+            }}/>
+          </div>
+        )}
+
+        {/* ── mobile preview image (small thumbnail) ── */}
+        {w.img && isMobile && (
+          <div style={{
+            width: "100%",
+            maxWidth: "280px",
+            aspectRatio: "16/9",
+            borderRadius: 8,
+            overflow: "hidden",
+            border: "1px solid var(--bd)",
+            boxShadow: "0 8px 30px rgba(0,0,0,.4)",
+            flexShrink: 0,
+            marginTop: 8,
+            transform: isActive ? "scale(1)" : "scale(0.95)",
+            opacity: isActive ? 0.8 : 0.4,
+            transition: "transform 0.6s cubic-bezier(0.22, 0.68, 0, 1.2), opacity 0.5s ease",
+          }}>
+            <img src={w.img} alt={w.title} style={{ 
+              width: "100%", 
+              height: "100%", 
+              objectFit: "cover" 
+            }}/>
+            <div style={{ 
+              position: "absolute", 
+              inset: 0, 
+              background: "linear-gradient(135deg, rgba(180,255,80,.08), transparent)" 
+            }}/>
+          </div>
+        )}
+
+        {/* ── icon fallback (mobile) ── */}
+        {!w.img && (
+          <div style={{
+            width: isMobile ? "80px" : "clamp(200px, 28vw, 380px)",
+            aspectRatio: "1",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontSize: isMobile ? 48 : 96,
+            background: "rgba(180,255,80,.04)",
+            border: "1px solid var(--bd)",
+            borderRadius: 8,
+            flexShrink: 0,
+            transform: isActive ? "scale(1)" : "scale(0.9)",
+            opacity: isActive ? 1 : 0.5,
+            transition: "transform 0.6s cubic-bezier(0.22, 0.68, 0, 1.2), opacity 0.5s ease",
+          }}>{w.icon}</div>
+        )}
+      </div>
+    </div>
   );
 }
 
