@@ -23,8 +23,8 @@ import heroBg from "./immg.png";
 const WORKS = [
   { id:1, cat:"web", title:"Portfolio Website",  desc:"A personal portfolio built from scratch — custom design, zero templates.",                                              tags:["HTML","CSS","JS","React JS"], img: w111,        soon:false, icon:null, link:"#" },
   { id:2, cat:"web", title:"Landing Page",        desc:"Responsive landing page with modern layout, smooth sections and clean UI.",                                             tags:["HTML","CSS"],                 img: land, soon:false, icon:null, link:"#" },
-  { id:3, cat:"web", title:"Alnazer Store",        desc:"A responsive jewelry e-commerce website built with a modern design, showcasing products in an elegant shopping experience.", tags:["HTML","CSS","JS"],         img: alnazer,        soon:false, icon:null, link:"#" },
-  { id:4, cat:"web", title:"TQ Store",             desc:"A dynamic SPA built with React JS. Component-based, state-driven.",                                                     tags:["React JS","JS","CSS"],       img: tq,           soon:false, icon:null, link:"https://michealmula.github.io/tq/" },
+  { id:3, cat:"web", title:"Alnazer Store",        desc:"A responsive jewelry e-commerce website built with a modern design, showcasing products in an elegant shopping experience.", tags:["HTML","CSS","JS","React JS"],         img: alnazer,        soon:false, icon:null, link:"https://michealmula.github.io/Alnazerstore/" },
+  { id:4, cat:"web", title:"TQ Store",             desc:"A dynamic SPA built with React JS. Component-based, state-driven.",                                                     tags:["React JS","JS","CSS"],       img: tq,           soon:false, icon:null, link:"https://michealmula.github.io/tqstore/" },
   { id:5, cat:"web", title:"Capital Finance",      desc:"A secure multi-step form application featuring dynamic flow and progress tracking.",                                    tags:["HTML","CSS","JS","React JS"],img: cap,         soon:false, icon:null, link:"https://michealmula.github.io/loan/" },
   { id:6, cat:"web", title:"Full Stack App",       desc:"Frontend meets backend. A complete web app — coming when the stack is ready.",                                          tags:["React JS","Node.js","CSS"],  img:null,                           soon:true,  icon:"🚀", link:null },
 ];
@@ -34,25 +34,103 @@ const SKILL_GROUPS = [
     title:"Frontend Core",
     accent:"#e34f26",
     skills:[
-      { img: htmll, label:"HTML5",      desc:"Semantic, accessible, well-structured web pages." },
-      { img: csss,  label:"CSS3",       desc:"Flexbox, Grid, animations, responsive design." },
-      { img: jss,   label:"JavaScript", desc:"DOM manipulation, events, interactive experiences." },
+      { img: htmll,   label:"HTML5",                  desc:"Semantic, accessible, well-structured web pages." },
+      { img: csss,    label:"CSS3",                   desc:"Flexbox, Grid, animations, responsive design." },
+      { img: jss,     label:"JavaScript (ES6+)",      desc:"DOM manipulation, events, interactive experiences." },
+      { img: reactjs, label:"React.js / JSX",         desc:"Component architecture, state management, SPAs." },
+      { img: null,    label:"Responsive Web Design",  desc:"Mobile-first layouts that work on every screen.", code:"📐" },
+      { img: null,    label:"SPA",                    desc:"Single Page Applications with smooth navigation.", code:"⚡" },
+      { img: null,    label:"Cross-Browser",          desc:"Consistent experience across all browsers.", code:"🌐" },
+      { img: null,    label:"Mobile-First",           desc:"Designing from smallest screen up.", code:"📱" },
+      { img: null,    label:"PWA",                    desc:"Progressive Web Apps — installable, offline-ready.", code:"🔌" },
     ],
   },
   {
-    title:"Frameworks & Libraries",
+    title:"Styling",
+    accent:"#7952b3",
+    skills:[
+      { img: null,    label:"Flexbox",                desc:"One-dimensional layout control.", code:"◫" },
+      { img: null,    label:"CSS Grid",               desc:"Two-dimensional layout system.", code:"⊞" },
+      { img: null,    label:"CSS Animations",         desc:"Keyframes, transitions, motion design.", code:"✨" },
+      { img: null,    label:"Media Queries",          desc:"Responsive breakpoints for every device.", code:"📺" },
+      { img: csss,    label:"Bootstrap",              desc:"Rapid UI with a utility-first framework." },
+      { img: null,    label:"Material UI",            desc:"Google's design system in React components.", code:"🎨" },
+      { img: null,    label:"Styled Components",      desc:"CSS-in-JS for dynamic, scoped styling.", code:"💅" },
+    ],
+  },
+  {
+    title:"React Ecosystem",
     accent:"#61dafb",
     skills:[
-      { img: reactjs, label:"React JS", desc:"Component architecture, state management, SPAs." },
+      { img: reactjs, label:"React Router",           desc:"Client-side routing for SPAs." },
+      { img: reactjs, label:"React Hooks",            desc:"useState, useEffect, useRef and custom hooks." },
+      { img: null,    label:"Context API",            desc:"Global state without external libraries.", code:"🔗" },
+      { img: null,    label:"Custom Hooks",           desc:"Reusable logic extracted into hooks.", code:"🪝" },
+      { img: null,    label:"Lazy Loading",           desc:"Load components only when needed.", code:"💤" },
+      { img: null,    label:"Code Splitting",         desc:"Smaller bundles, faster load times.", code:"✂️" },
+    ],
+  },
+  {
+    title:"APIs & Data",
+    accent:"#00e8c8",
+    skills:[
+      { img: null,    label:"REST API",               desc:"Consuming and integrating RESTful services.", code:"🔌" },
+      { img: null,    label:"Fetch API",              desc:"Native browser data fetching.", code:"📡" },
+      { img: null,    label:"Axios",                  desc:"HTTP client with interceptors and config.", code:"📦" },
+      { img: null,    label:"JSON",                   desc:"Data exchange format for APIs.", code:"{}" },
     ],
   },
   {
     title:"Tools & Workflow",
     accent:"#f05032",
     skills:[
-      { img: gitt,   label:"Git",     desc:"Version control, branching, merging, clean history." },
-      { img: githupp,label:"GitHub",  desc:"Repos, collaboration, code review, open-source." },
-      { img: vs,     label:"VS Code", desc:"Code editing, debugging, extensions, productivity." },
+      { img: gitt,    label:"Git",                    desc:"Version control, branching, merging." },
+      { img: githupp, label:"GitHub / GitHub Pages",  desc:"Repos, collaboration, deployment." },
+      { img: vs,      label:"VS Code",                desc:"Code editing, debugging, extensions." },
+      { img: null,    label:"Vite",                   desc:"Lightning-fast build tool for React.", code:"⚡" },
+      { img: null,    label:"npm",                    desc:"Package management and scripts.", code:"📦" },
+      { img: null,    label:"Chrome DevTools",        desc:"Debugging, performance, network analysis.", code:"🔧" },
+      { img: null,    label:"Figma → Code",           desc:"Translating Figma designs to HTML & React.", code:"🎨" },
+    ],
+  },
+  {
+    title:"Performance & SEO",
+    accent:"#88fd00",
+    skills:[
+      { img: null,    label:"Image Optimization",     desc:"Compression, lazy loading, modern formats.", code:"🖼️" },
+      { img: null,    label:"SEO Basics",             desc:"Meta tags, semantic HTML, structured data.", code:"🔍" },
+      { img: null,    label:"Semantic HTML",          desc:"Meaningful markup for accessibility and SEO.", code:"📝" },
+      { img: null,    label:"Performance",            desc:"Fast load times, efficient rendering.", code:"🚀" },
+    ],
+  },
+  {
+    title:"Deployment",
+    accent:"#a78bfa",
+    skills:[
+      { img: null,    label:"Netlify",                desc:"Deploy and host modern web projects.", code:"🟢" },
+      { img: githupp, label:"GitHub Pages",           desc:"Free static hosting from any repo." },
+    ],
+  },
+  {
+    title:"UI/UX",
+    accent:"#ff4d6d",
+    skills:[
+      { img: null,    label:"UI Development",         desc:"Building polished, interactive interfaces.", code:"🎨" },
+      { img: null,    label:"Landing Page Design",    desc:"High-converting, visually bold pages.", code:"🚀" },
+      { img: null,    label:"E-commerce UI",          desc:"Product pages, carts, checkout flows.", code:"🛍️" },
+      { img: null,    label:"Pixel Perfect",          desc:"Exact match between design and implementation.", code:"🎯" },
+      { img: null,    label:"Modern Web Design",      desc:"Clean, contemporary, trend-aware aesthetics.", code:"✦" },
+    ],
+  },
+  {
+    title:"Soft Skills",
+    accent:"#febc2e",
+    skills:[
+      { img: null,    label:"Problem Solving",        desc:"Breaking down complex challenges into solutions.", code:"🧠" },
+      { img: null,    label:"Debugging",              desc:"Finding and fixing bugs systematically.", code:"🐛" },
+      { img: null,    label:"Clean Code",             desc:"Readable, maintainable, well-structured code.", code:"✨" },
+      { img: null,    label:"Attention to Detail",    desc:"Nothing ships unless it's right.", code:"🔬" },
+      { img: null,    label:"Time Management",        desc:"Deadlines met, priorities handled.", code:"⏱️" },
     ],
   },
 ];
@@ -623,70 +701,188 @@ function Modal({ p, onClose }) {
 
 function Work() {
   const [m, setM] = useState(null);
+  const [active, setActive] = useState(0);
+  const [animating, setAnimating] = useState(false);
 
-  const openModal = (w) => setM(w);
-  const closeModal = () => setM(null);
+  const goTo = (idx) => {
+    if (animating || idx === active) return;
+    setAnimating(true);
+    setTimeout(() => { setActive(idx); setAnimating(false); }, 350);
+  };
+
+  const w = WORKS[active];
 
   return (
     <section id="work" style={{ padding:"80px clamp(24px,8vw,120px) 120px", maxWidth:1400, margin:"0 auto" }}>
       <Fi>
-        <div style={{ display:"flex", alignItems:"baseline", gap:20, marginBottom:48 }}>
+        <div style={{ display:"flex", alignItems:"baseline", gap:20, marginBottom:64 }}>
           <span style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:"clamp(52px,8vw,96px)", color:"var(--text)", lineHeight:1 }}>My</span>
           <span style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:"clamp(52px,8vw,96px)", color:"var(--a)", lineHeight:1 }}>Works</span>
           <div style={{ flex:1, height:1, background:"linear-gradient(to right,var(--a),transparent)", alignSelf:"center", marginLeft:16 }}/>
         </div>
       </Fi>
 
-      <div className="work-grid" style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(300px,1fr))", gap:20 }}>
-        {WORKS.map((w,i) => (
-          <Fi key={w.id} delay={i*.06}>
-            <Tilt
-              onClick={() => openModal(w)}
-              style={{ height:"100%", cursor:"none" }}
-            >
-              <div className="wcard" style={{ height:"100%", display:"flex", flexDirection:"column" }}>
-                {w.img
-                  ? <div className="wcard-img" style={{ backgroundImage:`url('${w.img}')` }}/>
-                  : <div className="wcard-placeholder">{w.icon}</div>
-                }
-                <div className="wcard-body" style={{ flex:1, display:"flex", flexDirection:"column" }}>
-                  <div className="wcard-title">
-                    {w.title}
-                    {w.soon && <span className="soon-badge">Soon</span>}
-                  </div>
-                  <div className="wcard-desc">{w.desc}</div>
-                  <div style={{ display:"flex", flexWrap:"wrap", gap:6, marginBottom:"auto" }}>
-                    {w.tags.map(t => <span key={t} className="tag">{t}</span>)}
-                  </div>
+      <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:0, border:"1px solid var(--bd)", borderRadius:8, overflow:"hidden", minHeight:520 }}>
 
-                  {w.link && !w.soon && (
-                    <div style={{ marginTop:14, paddingTop:12, borderTop:"1px solid var(--bd)" }}>
-                      <a
-                        href={w.link}
-                        target="_blank"
-                        rel="noreferrer"
-                        onClick={e => e.stopPropagation()}
-                        style={{
-                          display:"inline-flex", alignItems:"center", gap:6,
-                          fontSize:12, fontWeight:700, letterSpacing:".06em",
-                          textTransform:"uppercase", textDecoration:"none",
-                          color:"var(--a)", fontFamily:"'Cabinet Grotesk',sans-serif",
-                          borderBottom:"1px solid var(--a)", paddingBottom:2,
-                          pointerEvents:"all",
-                        }}
-                      >
-                        ↗ Visit Site
-                      </a>
-                    </div>
-                  )}
-                </div>
+        {/* LEFT — project list */}
+        <div style={{ borderRight:"1px solid var(--bd)", display:"flex", flexDirection:"column" }}>
+          {WORKS.map((p, i) => (
+            <div
+              key={p.id}
+              data-hover
+              onClick={() => { goTo(i); setM(null); }}
+              style={{
+                flex:1,
+                padding:"clamp(16px,2vw,28px) clamp(18px,2.5vw,36px)",
+                borderBottom: i < WORKS.length-1 ? "1px solid var(--bd)" : "none",
+                cursor:"none",
+                position:"relative",
+                overflow:"hidden",
+                background: active===i ? "rgba(180,255,80,.04)" : "transparent",
+                transition:"background .3s",
+              }}
+              onMouseEnter={e => { if(active!==i) e.currentTarget.style.background="rgba(255,255,255,.02)"; }}
+              onMouseLeave={e => { if(active!==i) e.currentTarget.style.background="transparent"; }}
+            >
+              {/* active indicator */}
+              <div style={{
+                position:"absolute", left:0, top:0, bottom:0,
+                width: active===i ? 3 : 0,
+                background:"var(--a)",
+                transition:"width .3s cubic-bezier(.22,.68,0,1.2)",
+              }}/>
+
+              <div style={{ display:"flex", alignItems:"center", gap:16 }}>
+                {/* number */}
+                <span style={{
+                  fontFamily:"'Bebas Neue',sans-serif",
+                  fontSize:13, letterSpacing:".12em",
+                  color: active===i ? "var(--a)" : "var(--t3)",
+                  transition:"color .3s",
+                  flexShrink:0,
+                }}>0{i+1}</span>
+
+                {/* title */}
+                <span style={{
+                  fontFamily:"'Cabinet Grotesk',sans-serif",
+                  fontWeight:800,
+                  fontSize:"clamp(13px,1.4vw,17px)",
+                  color: active===i ? "var(--text)" : "var(--t2)",
+                  transition:"color .3s",
+                  flex:1,
+                }}>{p.title}</span>
+
+                {p.soon && <span className="soon-badge">Soon</span>}
+
+                {/* arrow */}
+                <span style={{
+                  fontSize:14,
+                  color:"var(--t3)",
+                  transform: active===i ? "translateX(0) rotate(0deg)" : "translateX(-4px) rotate(-45deg)",
+                  transition:"transform .3s, color .3s",
+                  color: active===i ? "var(--a)" : "var(--t3)",
+                }}>→</span>
               </div>
-            </Tilt>
-          </Fi>
-        ))}
+
+              {/* tags under title when active */}
+              <div style={{
+                display:"flex", flexWrap:"wrap", gap:5,
+                marginTop: active===i ? 10 : 0,
+                maxHeight: active===i ? 40 : 0,
+                overflow:"hidden",
+                opacity: active===i ? 1 : 0,
+                transition:"max-height .4s cubic-bezier(.22,.68,0,1.2), opacity .3s, margin-top .3s",
+                paddingLeft:30,
+              }}>
+                {p.tags.map(t => <span key={t} className="tag" style={{fontSize:10}}>{t}</span>)}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* RIGHT — active project showcase */}
+        <div style={{ position:"relative", overflow:"hidden", background:"var(--bgc)" }}>
+
+          {/* image */}
+          <div style={{
+            position:"absolute", inset:0,
+            backgroundImage: w.img ? `url('${w.img}')` : "none",
+            backgroundSize:"cover",
+            backgroundPosition:"center",
+            opacity: animating ? 0 : 0.35,
+            transform: animating ? "scale(1.05)" : "scale(1)",
+            transition:"opacity .35s ease, transform .35s ease",
+            display:"flex", alignItems:"center", justifyContent:"center",
+            fontSize:80,
+          }}>
+            {!w.img && w.icon}
+          </div>
+
+          {/* gradient overlay */}
+          <div style={{ position:"absolute", inset:0, background:"linear-gradient(135deg, var(--bgc) 0%, transparent 60%, var(--bgc) 100%)", pointerEvents:"none" }}/>
+
+          {/* content */}
+          <div style={{
+            position:"relative", zIndex:2,
+            padding:"clamp(28px,4vw,52px)",
+            height:"100%",
+            display:"flex", flexDirection:"column", justifyContent:"flex-end",
+            opacity: animating ? 0 : 1,
+            transform: animating ? "translateY(12px)" : "translateY(0)",
+            transition:"opacity .35s ease, transform .35s cubic-bezier(.22,.68,0,1.2)",
+          }}>
+            <span style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:11, color:"var(--a)", letterSpacing:".2em", marginBottom:10 }}>
+              0{active+1} / 0{WORKS.length}
+            </span>
+            <h2 style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:"clamp(32px,4vw,56px)", color:"var(--text)", lineHeight:1, marginBottom:14 }}>
+              {w.title}
+            </h2>
+            <p style={{ color:"var(--t2)", fontSize:14, lineHeight:1.8, marginBottom:24, maxWidth:360 }}>
+              {w.desc}
+            </p>
+            <div style={{ display:"flex", gap:8, flexWrap:"wrap", marginBottom:24 }}>
+              {w.tags.map(t => <span key={t} className="tag">{t}</span>)}
+            </div>
+            <div style={{ display:"flex", gap:12, alignItems:"center" }}>
+              {w.link && !w.soon && (
+                <a href={w.link} target="_blank" rel="noreferrer" className="visit-btn" style={{ marginTop:0 }}>
+                  Visit Site <span className="arrow">↗</span>
+                </a>
+              )}
+              <button
+                onClick={() => setM(w)}
+                style={{
+                  background:"transparent", border:"1px solid var(--bd)",
+                  borderRadius:2, padding:"10px 20px",
+                  color:"var(--t2)", fontSize:12, fontWeight:700,
+                  letterSpacing:".06em", textTransform:"uppercase",
+                  cursor:"none", fontFamily:"'Cabinet Grotesk',sans-serif",
+                }}
+              >
+                Details
+              </button>
+            </div>
+          </div>
+
+          {/* prev / next nav */}
+          <div style={{ position:"absolute", top:16, right:16, display:"flex", gap:8, zIndex:3 }}>
+            {[["‹", active-1], ["›", active+1]].map(([lbl, idx]) => (
+              <button key={lbl}
+                onClick={() => goTo((idx + WORKS.length) % WORKS.length)}
+                style={{
+                  width:32, height:32, borderRadius:2,
+                  background:"var(--bgc)", border:"1px solid var(--bd)",
+                  color:"var(--text)", fontSize:18, cursor:"none",
+                  display:"flex", alignItems:"center", justifyContent:"center",
+                  fontFamily:"monospace",
+                }}
+              >{lbl}</button>
+            ))}
+          </div>
+        </div>
       </div>
 
-      {m && <Modal p={m} onClose={closeModal}/>}
+      {m && <Modal p={m} onClose={() => setM(null)}/>}
     </section>
   );
 }
@@ -817,7 +1013,16 @@ function Skills() {
                   {grp.skills.map((sk,si) => (
                     <Fi key={sk.label} delay={gi*.1+si*.06}>
                       <div className="skill-row" style={{"--row-accent":grp.accent}}>
-                        <img src={sk.img} alt={sk.label} className="skill-icon"/>
+                        {sk.img
+  ? <img src={sk.img} alt={sk.label} className="skill-icon"/>
+  : <span style={{
+      width:40, height:40, flexShrink:0,
+      borderRadius:8, border:"1px solid var(--bd)",
+      background:"var(--bg)",
+      display:"flex", alignItems:"center", justifyContent:"center",
+      fontSize:18,
+    }}>{sk.code}</span>
+}
                         <span className="skill-name">{sk.label}</span>
                         <span className="skill-desc">{sk.desc}</span>
                       </div>
