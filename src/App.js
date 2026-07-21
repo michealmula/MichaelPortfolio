@@ -470,7 +470,7 @@ backgroundImage: isMobile
     alt=""
     style={{
       position:"absolute",
-      right: "-55%", // 👈 خليها -10% عشان تظهر في اليمين
+      right: "-70%", // 👈 خليها -10% عشان تظهر في اليمين
       top: "50%",
       transform: "translateY(-50%)",
       height: "100%",
