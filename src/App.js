@@ -462,24 +462,25 @@ backgroundImage: isMobile
 {/* صورة الموبايل - يمين */}
 {/* صورة الموبايل - يمين */}
 {/* صورة الموبايل - يمين */}
+{/* صورة الموبايل - يمين بجد */}
 {isMobile && (
   <img
     src={heroBg}
     alt=""
     style={{
       position:"absolute",
-      right: "-20%", // 👈 خليها -20% عشان تظهر في اليمين
+      right: "0%", // 👈 خليها 0% عشان تبقى في أقصى اليمين
       top: "50%",
       transform: "translateY(-50%)",
-      height: "100%", // 👈 حجم مناسب
+      height: "80%",
       width: "auto",
       objectFit: "cover",
-      objectPosition: "70% center", // 👈 ركز على وشك (70% من اليمين)
+      objectPosition: "center center",
       zIndex: 0,
       pointerEvents: "none",
-      opacity: 0.8,
-      maskImage: "linear-gradient(to left, black 0%, black 50%, transparent 85%), linear-gradient(to top, transparent 0%, black 15%, black 100%), linear-gradient(to bottom, transparent 0%, black 10%, black 100%)",
-      WebkitMaskImage: "linear-gradient(to left, black 0%, black 50%, transparent 85%), linear-gradient(to top, transparent 0%, black 15%, black 100%), linear-gradient(to bottom, transparent 0%, black 10%, black 100%)",
+      opacity: 0.7,
+      maskImage: "linear-gradient(to right, transparent 0%, black 30%, black 100%)", // 👈 fade من الشمال
+      WebkitMaskImage: "linear-gradient(to right, transparent 0%, black 30%, black 100%)",
     }}
   />
 )}
@@ -505,8 +506,8 @@ top:0,bottom:0,width:1,background:"linear-gradient(to bottom,transparent,var(--a
 <div style={{
   position:"relative",
   zIndex:2,
-  maxWidth: isMobile ? "55%" : 600,
-  paddingRight: isMobile ? "15px" : "0",
+  maxWidth: isMobile ? "55%" : 600, // 👈 النص في الشمال
+  paddingRight: isMobile ? "20px" : "0",
 }}>       <div className="hero-tag" style={{marginBottom:24}}>
           <span style={{width:6,height:6,borderRadius:"50%",background:"var(--a)",display:"inline-block"}}/>
           Available for work
