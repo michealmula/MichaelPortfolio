@@ -461,24 +461,25 @@ backgroundImage: isMobile
 {/* صورة الموبايل - يمين */}
 {/* صورة الموبايل - يمين */}
 {/* صورة الموبايل - يمين */}
+{/* صورة الموبايل - يمين */}
 {isMobile && (
   <img
     src={heroBg}
     alt=""
     style={{
       position:"absolute",
-      right: "-90%",  // 👈 خليها -80% عشان تروح اليمين
+      right: "-20%", // 👈 خليها -20% عشان تظهر في اليمين
       top: "50%",
       transform: "translateY(-50%)",
-      height: "130%",  // 👈 زود شوية عشان تظهر
+      height: "100%", // 👈 حجم مناسب
       width: "auto",
-      objectFit: "cover",  // 👈 cover عشان تملأ
-      objectPosition: "center center",  // 👈 ركز على وشك
+      objectFit: "cover",
+      objectPosition: "70% center", // 👈 ركز على وشك (70% من اليمين)
       zIndex: 0,
       pointerEvents: "none",
-      opacity: 0.7,
-      maskImage: "linear-gradient(to right, transparent 0%, black 40%, black 100%), linear-gradient(to top, transparent 0%, black 20%, black 100%), linear-gradient(to bottom, transparent 0%, black 10%, black 100%)",
-      WebkitMaskImage: "linear-gradient(to right, transparent 0%, black 40%, black 100%), linear-gradient(to top, transparent 0%, black 20%, black 100%), linear-gradient(to bottom, transparent 0%, black 10%, black 100%)",
+      opacity: 0.8,
+      maskImage: "linear-gradient(to left, black 0%, black 50%, transparent 85%), linear-gradient(to top, transparent 0%, black 15%, black 100%), linear-gradient(to bottom, transparent 0%, black 10%, black 100%)",
+      WebkitMaskImage: "linear-gradient(to left, black 0%, black 50%, transparent 85%), linear-gradient(to top, transparent 0%, black 15%, black 100%), linear-gradient(to bottom, transparent 0%, black 10%, black 100%)",
     }}
   />
 )}
@@ -505,8 +506,8 @@ top:0,bottom:0,width:1,background:"linear-gradient(to bottom,transparent,var(--a
   position:"relative",
   zIndex:2,
   maxWidth: isMobile ? "55%" : 600,
-  paddingRight: isMobile ? "10px" : "0",
-}}>        <div className="hero-tag" style={{marginBottom:24}}>
+  paddingRight: isMobile ? "15px" : "0",
+}}>       <div className="hero-tag" style={{marginBottom:24}}>
           <span style={{width:6,height:6,borderRadius:"50%",background:"var(--a)",display:"inline-block"}}/>
           Available for work
         </div>
