@@ -277,11 +277,23 @@ function Tilt({ children, style={}, onClick }) {
 
 /* Custom Cursor */
 function Cursor() {
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  
+  useEffect(() => {
+    const onResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
   const dotRef = useRef(null);
   const ringRef = useRef(null);
   const ring = useRef({x:0,y:0});
   const mouse = useRef({x:0,y:0});
+  
   useEffect(() => {
+    // لو موبايل، مينفذش الكود
+    if (isMobile) return;
+    
     const mv = (e) => {
       mouse.current = {x:e.clientX,y:e.clientY};
       if (dotRef.current) { dotRef.current.style.left=e.clientX+"px"; dotRef.current.style.top=e.clientY+"px"; }
@@ -298,7 +310,11 @@ function Cursor() {
     window.addEventListener("mousemove", mv);
     window.addEventListener("mouseover", ho);
     return () => { cancelAnimationFrame(raf); window.removeEventListener("mousemove",mv); window.removeEventListener("mouseover",ho); };
-  }, []);
+  }, [isMobile]);
+  
+  // لو موبايل، متظهرش حاجة
+  if (isMobile) return null;
+  
   return (
     <>
       <div id="cur"><div id="cur-dot" ref={dotRef} style={{position:"fixed"}}/></div>
@@ -434,7 +450,9 @@ backgroundImage: isMobile
       backgroundPosition:"top center",
       display:"flex", flexDirection:"column",
       justifyContent:"center", alignItems:"flex-start",
-      padding:"0 clamp(24px,8vw,120px)",
+       padding: isMobile 
+    ? "0 16px 0 16px"   // 👈 في الموبايل يبقى 16px بس (تقريباً من الشمال)
+    : "0 clamp(24px,8vw,120px)", // 👈 في الشاشات الكبيرة نفس الكلام
     }}>
 
       {/* صورة الموبايل فقط */}
@@ -444,7 +462,7 @@ backgroundImage: isMobile
     alt=""
     style={{
       position:"absolute",
-      right:"-80%",
+      right:"-60%",  // 👈 غيّر من -80% لـ -60% عشان تظهر أكتر
       top:0,
       height:"100%",
       width:"auto",
@@ -452,16 +470,16 @@ backgroundImage: isMobile
       objectPosition:"right top",
       zIndex:0,
       pointerEvents:"none",
-      /* fade من الشمال ومن تحت */
-      maskImage:"linear-gradient(to right, transparent 0%, black 30%, black 100%), linear-gradient(to top, transparent 0%, black 15%, black 100%)",
-      WebkitMaskImage:"linear-gradient(to right, transparent 0%, black 30%, black 100%), linear-gradient(to top, transparent 0%, black 15%, black 100%)",
+      maskImage:"linear-gradient(to right, transparent 0%, black 20%, black 100%), linear-gradient(to top, transparent 0%, black 15%, black 100%)",
+      WebkitMaskImage:"linear-gradient(to right, transparent 0%, black 20%, black 100%), linear-gradient(to top, transparent 0%, black 15%, black 100%)",
     }}
   />
 )}
       <Particles />
 
       {/* ── decorative vertical accent line ── */}
-      <div style={{position:"absolute",left:"clamp(24px,8vw,120px)",top:0,bottom:0,width:1,background:"linear-gradient(to bottom,transparent,var(--a),transparent)",opacity:.25,zIndex:1}} />
+      <div style={{position:"absolute", left: isMobile ? "16px" : "clamp(24px,8vw,120px)",
+top:0,bottom:0,width:1,background:"linear-gradient(to bottom,transparent,var(--a),transparent)",opacity:.25,zIndex:1}} />
 
       {/* ── glow blob behind photo area ── */}
       <div style={{
@@ -1042,8 +1060,8 @@ function FullSlideContent({ w, onOpen, isActive }) {
           backgroundImage: `url('${w.img}')`,
           backgroundSize: "cover", 
           backgroundPosition: "center",
-          opacity: isMobile ? 0.08 : 0.15,
-          filter: isMobile ? "blur(4px)" : "blur(3px)",
+          opacity: isMobile ? 0.12 : 0.15, // 👈 أوضح شوية
+    filter: isMobile ? "blur(2px)" : "blur(3px)", 
           transform: isMobile ? "scale(1.1)" : "scale(1)",
           transition: "opacity 0.6s ease, transform 0.6s ease",
         }}/>
@@ -1053,10 +1071,10 @@ function FullSlideContent({ w, onOpen, isActive }) {
       <div style={{
         position: "absolute", 
         inset: 0,
-        background: isMobile 
-          ? `linear-gradient(to bottom, var(--bg) 0%, transparent 15%, transparent 70%, var(--bg) 100%)`
-          : `linear-gradient(to right, var(--bg) 0%, var(--bg) 40%, transparent 75%), 
-             linear-gradient(to top, var(--bg) 0%, transparent 25%)`,
+  background: isMobile 
+    ? `linear-gradient(to bottom, var(--bg) 0%, transparent 10%, transparent 60%, var(--bg) 100%)` // 👈 غيرنا النسب
+    : `linear-gradient(to right, var(--bg) 0%, var(--bg) 40%, transparent 75%), 
+       linear-gradient(to top, var(--bg) 0%, transparent 25%)`,
         pointerEvents: "none",
       }}/>
 
@@ -1070,10 +1088,10 @@ function FullSlideContent({ w, onOpen, isActive }) {
         flexDirection: isMobile ? "column" : "row",
         alignItems: isMobile ? "center" : "center",
         justifyContent: isMobile ? "center" : "space-between",
-        padding: isMobile ? "60px 20px 20px" : "120px clamp(24px, 8vw, 120px) 80px",
-        maxWidth: isMobile ? "100%" : 1400,
+  padding: isMobile ? "70px 20px 30px" : "120px clamp(24px, 8vw, 120px) 80px",
+          maxWidth: isMobile ? "100%" : 1400,
         margin: "0 auto",
-        gap: isMobile ? 16 : 0,
+         gap: isMobile ? 20 : 0,
       }}>
         {/* ── left content ── */}
         <div style={{
@@ -1246,33 +1264,46 @@ function FullSlideContent({ w, onOpen, isActive }) {
         )}
 
         {/* ── mobile preview image (small thumbnail) ── */}
-        {w.img && isMobile && (
-          <div style={{
-            width: "100%",
-            maxWidth: "280px",
-            aspectRatio: "16/9",
-            borderRadius: 8,
-            overflow: "hidden",
-            border: "1px solid var(--bd)",
-            boxShadow: "0 8px 30px rgba(0,0,0,.4)",
-            flexShrink: 0,
-            marginTop: 8,
-            transform: isActive ? "scale(1)" : "scale(0.95)",
-            opacity: isActive ? 0.8 : 0.4,
-            transition: "transform 0.6s cubic-bezier(0.22, 0.68, 0, 1.2), opacity 0.5s ease",
-          }}>
-            <img src={w.img} alt={w.title} style={{ 
-              width: "100%", 
-              height: "100%", 
-              objectFit: "cover" 
-            }}/>
-            <div style={{ 
-              position: "absolute", 
-              inset: 0, 
-              background: "linear-gradient(135deg, rgba(180,255,80,.08), transparent)" 
-            }}/>
-          </div>
-        )}
+{/* ── mobile preview image (bigger & better) ── */}
+{w.img && isMobile && (
+  <div style={{
+    width: "100%",
+    maxWidth: "340px", // 👈 زودنا من 280 لـ 340
+    aspectRatio: "16/10", // 👈 غيرنا النسبة
+    borderRadius: 12, // 👈 زودنا التقريب
+    overflow: "hidden",
+    border: "2px solid var(--bd)", // 👈 تخين شوية
+    boxShadow: "0 12px 40px rgba(0,0,0,.5)", // 👈 ظل أقوى
+    flexShrink: 0,
+    marginTop: 12, // 👈 مسافة أكبر
+    marginBottom: 8,
+    transform: isActive ? "scale(1) translateY(0)" : "scale(0.95) translateY(10px)",
+    opacity: isActive ? 1 : 0.6, // 👈 أوضح
+    transition: "transform 0.6s cubic-bezier(0.22, 0.68, 0, 1.2), opacity 0.5s ease",
+  }}>
+    <img src={w.img} alt={w.title} style={{ 
+      width: "100%", 
+      height: "100%", 
+      objectFit: "cover",
+      transition: "transform 0.5s ease",
+    }}/>
+    <div style={{ 
+      position: "absolute", 
+      inset: 0, 
+      background: "linear-gradient(135deg, rgba(180,255,80,.1), transparent 60%)",
+    }}/>
+    {/* Overlay shine effect */}
+    <div style={{
+      position: "absolute",
+      top: 0,
+      left: 0,
+      right: 0,
+      height: "40%",
+      background: "linear-gradient(to bottom, rgba(255,255,255,.05), transparent)",
+      pointerEvents: "none",
+    }}/>
+  </div>
+)}
 
         {/* ── icon fallback (mobile) ── */}
         {!w.img && (
