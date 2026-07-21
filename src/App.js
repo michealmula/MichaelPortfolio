@@ -469,7 +469,7 @@ backgroundImage: isMobile
     alt=""
     style={{
       position:"absolute",
-      right: "0%", // 👈 خليها 0% عشان تبقى في أقصى اليمين
+      right: "-40%", // 👈 خليها 0% عشان تبقى في أقصى اليمين
       top: "50%",
       transform: "translateY(-50%)",
       height: "80%",
