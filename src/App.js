@@ -463,24 +463,25 @@ backgroundImage: isMobile
 {/* صورة الموبايل - يمين */}
 {/* صورة الموبايل - يمين */}
 {/* صورة الموبايل - يمين بجد */}
+{/* صورة الموبايل - يمين */}
 {isMobile && (
   <img
     src={heroBg}
     alt=""
     style={{
       position:"absolute",
-      right: "-40%", // 👈 خليها 0% عشان تبقى في أقصى اليمين
+      right: "-10%", // 👈 خليها -10% عشان تظهر في اليمين
       top: "50%",
       transform: "translateY(-50%)",
-      height: "80%",
+      height: "100%",
       width: "auto",
       objectFit: "cover",
       objectPosition: "center center",
       zIndex: 0,
       pointerEvents: "none",
-      opacity: 0.7,
-      maskImage: "linear-gradient(to right, transparent 0%, black 30%, black 100%)", // 👈 fade من الشمال
-      WebkitMaskImage: "linear-gradient(to right, transparent 0%, black 30%, black 100%)",
+      opacity: 0.8,
+      maskImage: "linear-gradient(to left, black 0%, black 60%, transparent 90%)", // 👈 من اليمين للشمال
+      WebkitMaskImage: "linear-gradient(to left, black 0%, black 60%, transparent 90%)",
     }}
   />
 )}
