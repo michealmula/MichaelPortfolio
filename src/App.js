@@ -17,6 +17,8 @@ import linkedin from "./realme2pro/linkedinnn.png";
 import whatsapp from "./realme2pro/whatsapp.png";
 import heroBg from "./immg.png";
 
+import luma from "./realme2pro/image11.png"; // أو luma.jpg
+
 import { motion, AnimatePresence } from 'framer-motion';
 
 import { useSpring, animated } from '@react-spring/web';
@@ -25,12 +27,14 @@ import { useSpring, animated } from '@react-spring/web';
 ══════════════════════════════════════════ */
 
 const WORKS = [
-  { id:1, cat:"web", title:"Portfolio Website",  desc:"A personal portfolio built from scratch — custom design, zero templates.",                                              tags:["HTML","CSS","JS","React JS"], img: w111,        soon:false, icon:null, link:"#" },
-  { id:2, cat:"web", title:"Landing Page",        desc:"Responsive landing page with modern layout, smooth sections and clean UI.",                                             tags:["HTML","CSS"],                 img: land, soon:false, icon:null, link:"#" },
-  { id:3, cat:"web", title:"Alnazer Store",        desc:"A responsive jewelry e-commerce website built with a modern design, showcasing products in an elegant shopping experience.", tags:["HTML","CSS","JS","React JS"],         img: alnazer,        soon:false, icon:null, link:"https://michealmula.github.io/Alnazerstore/" },
-  { id:4, cat:"web", title:"TQ Store",             desc:"A dynamic SPA built with React JS. Component-based, state-driven.",                                                     tags:["React JS","JS","CSS"],       img: tq,           soon:false, icon:null, link:"https://michealmula.github.io/tqstore/" },
-  { id:5, cat:"web", title:"Capital Finance",      desc:"A secure multi-step form application featuring dynamic flow and progress tracking.",                                    tags:["HTML","CSS","JS","React JS"],img: cap,         soon:false, icon:null, link:"https://michealmula.github.io/loan/" },
-  { id:6, cat:"web", title:"Full Stack App",       desc:"Frontend meets backend. A complete web app — coming when the stack is ready.",                                          tags:["React JS","Node.js","CSS"],  img:null,                           soon:true,  icon:"🚀", link:null },
+  { id:1, cat:"web", title:"Portfolio Website", desc:"A personal portfolio built from scratch — custom design, zero templates.", tags:["HTML","CSS","JS","React JS"], img: w111, soon:false, icon:null, link:null, modalDesc:"This portfolio is a complete custom-coded project. It features a dark/light theme, a custom cursor, a full-screen scrollable work section, and interactive components built with React hooks. Every detail was designed and coded from the ground up to reflect a modern, personal brand identity." },
+  { id:2, cat:"web", title:"Landing Page", desc:"Responsive landing page with modern layout, smooth sections and clean UI.", tags:["HTML","CSS"], img: land, soon:true, icon:null, link:null, modalDesc:"A modern, responsive landing page concept designed to showcase a product or service. It features a clean, minimalist layout with smooth scrolling sections, a clear call-to-action, and a focus on visual hierarchy. The design is fully responsive and optimized for all screen sizes." },
+  { id:3, cat:"web", title:"Luma Store", desc:"A modern, responsive e-commerce website for a women's accessories boutique, blending elegance with functionality.", tags:["HTML","CSS","React JS","Vite"], img: luma, soon:false, icon:null, link:"https://michealmula.github.io/luma-boutique/", modalDesc:"Luma Store is a full-featured e-commerce platform designed for a women's accessories and gifts boutique. The project focuses on a clean, modern user interface that reflects the brand's identity. It utilizes React with Vite for a fast and efficient development experience. The site includes a clear product showcase, about section, and integrated contact details with WhatsApp and location. It aims to provide a seamless and elegant shopping experience that mirrors the boutique's attention to detail and quality." },
+  { id:4, cat:"web", title:"Alnazer Store", desc:"A full-stack e-commerce website built with React and Firebase, featuring a modern shopping experience, an integrated admin dashboard, and WhatsApp ordering.", tags:["React JS","Firebase","JavaScript","CSS","Admin Dashboard"], img: alnazer, soon:false, icon:null, link:"https://michealmula.github.io/Alnazerstore/", modalDesc:"Alnazer Store is a full-featured e-commerce platform built with React and Firebase. It offers a modern shopping experience with a focus on jewelry and accessories. The project includes a fully integrated admin dashboard that allows for complete product management (add, edit, delete). Firebase handles the backend data, authentication, and real-time product storage. A unique feature is the integrated WhatsApp ordering system, streamlining the purchase process for customers." },
+  { id:5, cat:"web", title:"TQ Store", desc:"A dynamic SPA built with React JS. Component-based, state-driven.", tags:["React JS","JS","CSS"], img: tq, soon:false, icon:null, link:"https://michealmula.github.io/tqstore/", modalDesc:"TQ Store is a dynamic Single Page Application (SPA) built entirely with React JS. It demonstrates a deep understanding of component-based architecture and state management. The project showcases a fully functional product catalog with a shopping cart feature. It's a practical example of how to build a responsive and interactive e-commerce frontend using React hooks and modern JavaScript." },
+  { id:6, cat:"web", title:"Capital Finance", desc:"A secure multi-step form application featuring dynamic flow and progress tracking.", tags:["HTML","CSS","JS","React JS"], img: cap, soon:false, icon:null, link:"https://michealmula.github.io/loan/", modalDesc:"Capital Finance is a secure, multi-step loan application form. It demonstrates a complex dynamic flow with progress tracking, state management across different form steps, and robust data validation. The project highlights skills in building interactive user interfaces, managing application state, and creating a guided user experience for sensitive data input." },
+  // { id:7, cat:"web", title:"Full Stack E-Commerce", desc:"A complete e-commerce platform with user authentication, product catalog, shopping cart, and order management.", tags:["React JS","Node.js","Express","MongoDB","JWT"], img:null, soon:false, icon:"🛒", link:"#", modalDesc:"A fully-featured e-commerce platform built from the ground up. It includes a secure user authentication system, a dynamic product catalog, a fully functional shopping cart with order management, and an integrated payment gateway (simulated). The project is built using the MERN stack (MongoDB, Express.js, React, Node.js) and demonstrates a complete end-to-end development workflow." },
+  { id:8, cat:"web", title:"Full Stack App", desc:"Frontend meets backend. A complete web app — coming when the stack is ready.", tags:["React JS","Node.js","CSS"], img:null, soon:true, icon:"🚀", link:null, modalDesc:"" },
 ];
 
 const SKILL_GROUPS = [
@@ -140,7 +144,7 @@ const SKILL_GROUPS = [
 ];
 
 const STATS = [
-  { val:6,   suf:"",  lbl:"Projects" },
+  { val:8,   suf:"",  lbl:"Projects" },
   { val:2,   suf:"y", lbl:"Coding"   },
   { val:500, suf:"+", lbl:"Hours"    },
   { val:7,   suf:"",  lbl:"Skills"   },
@@ -681,7 +685,9 @@ function Modal({ p, onClose }) {
             <h3 style={{ fontFamily:"'Cabinet Grotesk',sans-serif", fontWeight:800, fontSize:20, color:"var(--text)", flex:1 }}>{p.title}</h3>
             {p.soon && <span className="soon-badge">Soon</span>}
           </div>
-          <p style={{ color:"var(--t2)", fontSize:14, lineHeight:1.8, marginBottom:20 }}>{p.desc}</p>
+<p style={{ color:"var(--t2)", fontSize:14, lineHeight:1.8, marginBottom:20 }}>
+  {p.modalDesc || p.desc}
+</p>
           <div style={{ display:"flex", flexWrap:"wrap", gap:8, marginBottom: p.link ? 24 : 0 }}>
             {p.tags.map(t => <span key={t} className="tag">{t}</span>)}
           </div>
